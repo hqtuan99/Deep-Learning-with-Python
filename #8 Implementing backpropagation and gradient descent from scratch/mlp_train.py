@@ -72,11 +72,30 @@ class MLP:
     def gradient_descent(self, learning_rate):
         for i in range(len(self.weights)):
             weights = self.weights[i]
-            print("Original W{} {}".format(i, weights))
+            #print("Original W{} {}".format(i, weights))
             derivatives = self.derivatives[i]
             weights += derivatives * learning_rate
-            print("Updated W{} {}".format(i, weights))
+            #print("Updated W{} {}".format(i, weights))
             
+    def train(self, inputs, targets, epochs, learning_rate):
+        for i in range(epochs):
+            sum_error = 0
+            for input, target in zip(inputs, targets):
+                # forward propagation
+                output = self.forward_propergate(input) 
+                # calculate error
+                error = target - output
+                # back propagation
+                self.back_propagate(error)
+                # apply gradient descent
+                self.gradient_descent(learning_rate)
+                sum_error += self._mse(target, output)
+            # report error
+            print("Error: {} at epoch {}".format(sum_error / len(inputs), i))    
+            
+    def _mse(self, target, output):
+        return np.average((target - output)**2)
+    
     def _sigmoid_derivatives(self, x):
         return x * (1.0 - x)
     
@@ -84,22 +103,13 @@ class MLP:
         y = 1 / (1 + np.exp(-x))
         return y
 if __name__ == "__main__":
+    # create a dataset to train a network for the sum operation
+    inputs = np.array([[random() / 2 for _ in range(2)] for _ in range(1000)]) # array([0.1, 0.2], [0.3, 0.4])
+    targets = np.array([[i[0] + i[1]] for i in inputs]) # array([[0.3], [0.7]])
+    
     # create an MLP
     mlp = MLP(2, [5], 1)
     
-    # create dummy data
-    inputs = np.array([0.1, 0.2])
-    target = np.array([0.3])
-    
-    # forward propagation
-    output = mlp.forward_propergate(inputs) 
-    
-    # calculate error
-    error = target - output
-    
-    # back propagation
-    mlp.back_propagate(error)
-    
-    # apply gradient descent
-    mlp.gradient_descent(learning_rate=1)
+    # train mlp
+    mlp.train(inputs, targets, 50, 0.1)
     
