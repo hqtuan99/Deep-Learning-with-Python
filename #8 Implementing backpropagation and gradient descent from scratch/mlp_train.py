@@ -1,12 +1,14 @@
 import numpy as np
 from random import random
 
+from scipy.misc import derivative
+
 # save activations and derivatives
 # implement backpropagation
 # implement gradient descent
 # implement train
 # train our net with some dummy dataset
-# make som predictions
+# make some predictions
 
 class MLP:
     def __init__(self, num_inputs=3, hidden_layers=[3, 3], num_outputs=2):
@@ -66,6 +68,14 @@ class MLP:
                 print("Derivatives for W{}: {}".format(i, self.derivatives[i]))
                 
         return error
+    
+    def gradient_descent(self, learning_rate):
+        for i in range(len(self.weights)):
+            weights = self.weights[i]
+            print("Original W{} {}".format(i, weights))
+            derivatives = self.derivatives[i]
+            weights += derivatives * learning_rate
+            print("Updated W{} {}".format(i, weights))
             
     def _sigmoid_derivatives(self, x):
         return x * (1.0 - x)
@@ -88,5 +98,8 @@ if __name__ == "__main__":
     error = target - output
     
     # back propagation
-    mlp.back_propagate(error, verbose=True)
+    mlp.back_propagate(error)
+    
+    # apply gradient descent
+    mlp.gradient_descent(learning_rate=1)
     
