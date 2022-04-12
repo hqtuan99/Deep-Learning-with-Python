@@ -102,6 +102,7 @@ class MLP:
     def _sigmoid(self, x):
         y = 1 / (1 + np.exp(-x))
         return y
+    
 if __name__ == "__main__":
     # create a dataset to train a network for the sum operation
     inputs = np.array([[random() / 2 for _ in range(2)] for _ in range(1000)]) # array([0.1, 0.2], [0.3, 0.4])
@@ -111,5 +112,13 @@ if __name__ == "__main__":
     mlp = MLP(2, [5], 1)
     
     # train mlp
-    mlp.train(inputs, targets, 50, 0.1)
+    mlp.train(inputs, targets, 100, 0.1)
     
+    # create dummy data
+    input = np.array([0.3, 0.4])
+    target = np.array([0.7])
+    output = mlp.forward_propergate(input)
+    
+    print("The input numbers are {} and {}".format(input[0], input[1]))
+    print("The anticipated result is: {}".format(target[0]))
+    print("Our network believes that {} + {} is equal to {}.".format(input[0], input[1], output[0]))
