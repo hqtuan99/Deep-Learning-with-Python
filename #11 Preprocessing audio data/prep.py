@@ -1,3 +1,6 @@
+"""
+There's might be a chance that audio file is not loadable. Should use Colab to run code instead
+"""
 import librosa, librosa.display
 import matplotlib.pyplot as plt
 import numpy as np
